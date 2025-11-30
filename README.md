@@ -34,6 +34,103 @@ This CSV contains:
 - Includes platform, rating, review text, and dates
 - Limited to 50 sample reviews for reference
 
+## How to Re-run for a New Week
+
+The system automatically processes reviews for the **last completed week** (Monday to Sunday). To generate a report for a different week:
+
+### Option 1: Run Complete Pipeline for Specific Week
+
+```bash
+# Run for a specific week (provide start and end dates)
+python3 run_pipeline.py 2025-11-24 2025-11-30
+
+# This will:
+# 1. Fetch reviews (if not already fetched)
+# 2. Classify reviews into themes
+# 3. Generate weekly report for Nov 24-30
+# 4. Send email (unless --skip-email flag is used)
+```
+
+### Option 2: Generate Report Only (Using Existing Reviews)
+
+If reviews are already fetched and classified, you can generate a report for a specific week:
+
+```bash
+# Generate report for specific week
+python3 run_generate_report.py 2025-11-24 2025-11-30
+
+# Send email for that week
+python3 run_send_email.py 2025-11-24 2025-11-30
+```
+
+### Option 3: Force Refresh Reviews
+
+To fetch fresh reviews before generating a report:
+
+```bash
+# Force refresh reviews (fetches latest from stores)
+python3 run_pipeline.py --force-refresh
+
+# Or fetch only
+python3 run_fetch.py
+```
+
+### Weekly Schedule
+
+The system is configured to run automatically every **Monday at 9:00 AM IST** (configurable). This processes the previous week's reviews.
+
+To change the schedule, update `.env`:
+```bash
+REVIEW_FETCH_DAY=Monday
+REVIEW_FETCH_TIME=09:00
+REVIEW_FETCH_TIMEZONE=Asia/Kolkata
+```
+
+## Theme Legend
+
+Themes are automatically discovered by the LLM based on actual user feedback. Common themes include:
+
+### Common Themes (Examples)
+
+| Theme Name | Description | Typical Issues |
+|------------|-------------|----------------|
+| **App Glitches & Errors** | Technical issues and bugs | Login problems, crashes, slow performance, incorrect balance displays |
+| **Feature Requests & Improvements** | User suggestions for new features | Missing features, UI improvements, trading tools, chart enhancements |
+| **Customer Support Issues** | Support-related complaints | Slow response, unhelpful agents, unresolved issues, long wait times |
+| **High Charges & Hidden Fees** | Pricing and fee concerns | High brokerage, unexpected charges, fee transparency, cost comparisons |
+| **Order Execution Problems** | Trading execution issues | Price discrepancies, auto square-offs, execution delays, order failures |
+
+### How Themes Are Determined
+
+1. **Automatic Discovery**: The LLM analyzes review samples and identifies the top 5 most common themes
+2. **Dynamic Classification**: Themes adapt based on actual user feedback patterns
+3. **Review Assignment**: Each review is classified into exactly one theme
+4. **Weekly Selection**: Top 3 themes by frequency are included in the weekly report
+
+### Viewing All Themes
+
+To see all themes discovered in your database:
+
+```bash
+# Query themes from database
+sqlite3 reviews.db "SELECT name, description FROM themes ORDER BY name;"
+```
+
+Or use Python:
+```python
+from src.database.models import Theme
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine('sqlite:///reviews.db')
+Session = sessionmaker(bind=engine)
+session = Session()
+
+themes = session.query(Theme).all()
+for theme in themes:
+    print(f"{theme.name}: {theme.description}")
+```
+
 ## Features
 
 - ✅ Automated review fetching from both platforms
