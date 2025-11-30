@@ -1,5 +1,4 @@
 """Scheduler package."""
-from src.scheduler.review_scheduler import ReviewScheduler
+from src.scheduler.pipeline_scheduler import PipelineScheduler
 
-__all__ = ["ReviewScheduler"]
-
+__all__ = ["PipelineScheduler"]
