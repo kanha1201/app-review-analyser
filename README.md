@@ -10,6 +10,30 @@ This system automatically:
 3. **Generates** weekly one-page reports (≤250 words) with top themes, quotes, and actions
 4. **Sends** email reports to Product, Support, and Leadership teams
 
+## Sample Outputs
+
+### 📄 Weekly Pulse Note
+View the latest weekly product pulse: [`weekly_pulse_note.md`](weekly_pulse_note.md)
+
+This contains:
+- Top 3 themes identified from user reviews
+- 3 representative user quotes (anonymized)
+- 3 actionable insights for product improvement
+
+### 📧 Email Draft
+View a sample email draft: [`email_draft.txt`](email_draft.txt)
+
+This shows the formatted email that gets sent to stakeholders with the weekly pulse.
+
+### 📊 Sample Reviews
+View sample reviews used for analysis: [`sample_reviews.csv`](sample_reviews.csv)
+
+This CSV contains:
+- Sample reviews from both App Store and Google Play Store
+- Reviews are cleaned and redacted (PII removed)
+- Includes platform, rating, review text, and dates
+- Limited to 50 sample reviews for reference
+
 ## Features
 
 - ✅ Automated review fetching from both platforms
